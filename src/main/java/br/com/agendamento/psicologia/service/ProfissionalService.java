@@ -9,10 +9,10 @@ import java.util.Optional;
 @Service
 public class ProfissionalService {
 
-    private final ProfissionalRepository profissionalRepository
+    private final ProfissionalRepository profissionalRepository;
 
-    public ProfssionalService(ProfissionalRepository profissionalRepository) {
-        this.profissionalRepository = profssionalService;
+    public ProfissionalService(ProfissionalRepository profissionalRepository) {
+        this.profissionalRepository = profissionalRepository;
     }
 
     public Optional<Profissional> buscarPorEmail(String email) {

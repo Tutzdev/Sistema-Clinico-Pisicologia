@@ -24,7 +24,7 @@ public class AgendaController {
             agendaService.listarHorariosDisponiveis()
         );
 
-        return "admin/agenda"
+        return "admin/agenda";
     }
 
     @PostMapping
@@ -33,6 +33,6 @@ public class AgendaController {
     ) {
         agendaService.criarHorario(horario);
 
-        return "redirect:/admin/agenda"
+        return "redirect:/admin/agenda";
     }
 }

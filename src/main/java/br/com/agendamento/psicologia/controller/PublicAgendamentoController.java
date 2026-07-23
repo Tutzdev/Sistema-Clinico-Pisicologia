@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/agendar")
 public class PublicAgendamentoController {
 
-    private final ProfssionalService profissionalService;
+    private final ProfissionalService profissionalService;
     private final AgendaService agendaService;
 
     public PublicAgendamentoController(
@@ -28,7 +28,7 @@ public class PublicAgendamentoController {
         Model model
     ) {
         Profissional profissional = 
-                profssionalService.buscarPorCodigoAgenda(codigoAgenda).orElseThrow();
+                profissionalService.buscarPorCodigoAgenda(codigoAgenda).orElseThrow();
 
             model.addAttribute("profissional", profissional);
 
