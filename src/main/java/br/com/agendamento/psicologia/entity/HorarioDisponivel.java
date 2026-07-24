@@ -48,4 +48,8 @@ public class HorarioDisponivel {
     public void reservar() {
         this.disponivel = false;
     }
+
+    public void liberar() {
+        this.disponivel = true;
+    }
 }

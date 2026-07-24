@@ -125,4 +125,11 @@ public class AgendaService {
             );
         }
     }
+
+    public long contarHorariosDisponiveis() {
+        return horarioRepository
+                .countByDisponivelTrueAndDataHoraAfter(
+                        LocalDateTime.now()
+                );
+    }
 }

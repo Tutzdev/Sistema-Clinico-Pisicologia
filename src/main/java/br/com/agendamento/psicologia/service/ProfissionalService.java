@@ -198,4 +198,8 @@ public class ProfissionalService {
 
         return codigoAgenda.trim().toLowerCase(Locale.ROOT);
     }
+
+    public long contarTodos() {
+        return profissionalRepository.count();
+    }
 }
