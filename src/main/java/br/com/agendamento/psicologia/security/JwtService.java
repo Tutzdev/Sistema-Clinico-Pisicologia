@@ -18,6 +18,8 @@ import java.time.Instant;
 @Service
 public class JwtService {
 
+    public static final String COOKIE_NAME = "ADMIN_TOKEN";
+
     private final JwtEncoder jwtEncoder;
     private final JwtDecoder jwtDecoder;
     private final String issuer;

@@ -1,9 +1,15 @@
 package br.com.agendamento.psicologia.config;
 
+import br.com.agendamento.psicologia.enums.RoleEnum;
+import br.com.agendamento.psicologia.repository.UsuarioRepository;
 import br.com.agendamento.psicologia.security.CustomUserDetailsService;
 import br.com.agendamento.psicologia.security.JwtAuthenticationFilter;
 import br.com.agendamento.psicologia.security.JwtService;
+import br.com.agendamento.psicologia.service.UsuarioService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -34,11 +40,16 @@ import java.util.Base64;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(
+            SecurityConfig.class
+    );
+
     private static final int TAMANHO_MINIMO_CHAVE_JWT = 32;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        return PasswordEncoderFactories
+                .createDelegatingPasswordEncoder();
     }
 
     @Bean
@@ -62,7 +73,10 @@ public class SecurityConfig {
             );
         }
 
-        return new SecretKeySpec(secretBytes, "HmacSHA256");
+        return new SecretKeySpec(
+                secretBytes,
+                "HmacSHA256"
+        );
     }
 
     @Bean
@@ -104,30 +118,73 @@ public class SecurityConfig {
     }
 
     @Bean
+    public ApplicationRunner criarAdministradorInicial(
+            UsuarioRepository usuarioRepository,
+            UsuarioService usuarioService,
+            @Value("${security.initial-admin.email:}")
+            String email,
+            @Value("${security.initial-admin.password:}")
+            String senha
+    ) {
+        return arguments -> {
+            if (usuarioRepository.existsByRole(RoleEnum.ADMIN)) {
+                return;
+            }
+
+            if (email == null
+                    || email.isBlank()
+                    || senha == null
+                    || senha.isBlank()) {
+                throw new IllegalStateException(
+                        "Configure ADMIN_EMAIL e ADMIN_PASSWORD "
+                                + "para criar o primeiro administrador."
+                );
+            }
+
+            usuarioService.criarAdministradorInicial(
+                    email,
+                    senha
+            );
+
+            LOGGER.info(
+                    "Administrador inicial criado com sucesso."
+            );
+        };
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             JwtService jwtService,
             CustomUserDetailsService userDetailsService
     ) throws Exception {
-        JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(
-                jwtService,
-                userDetailsService
-        );
+        JwtAuthenticationFilter jwtFilter =
+                new JwtAuthenticationFilter(
+                        jwtService,
+                        userDetailsService
+                );
 
         http
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
-                .sessionManagement(session -> session.sessionCreationPolicy(
-                        SessionCreationPolicy.STATELESS
-                ))
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/api/**")
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(
+                                SessionCreationPolicy.STATELESS
+                        )
+                )
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint(
-                                new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)
+                                new HttpStatusEntryPoint(
+                                        HttpStatus.UNAUTHORIZED
+                                )
                         )
                 )
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
+                                "/",
                                 "/login",
                                 "/api/auth/**",
                                 "/agendar/**",
@@ -136,15 +193,30 @@ public class SecurityConfig {
                                 "/favicon.ico",
                                 "/error"
                         ).permitAll()
+
+                        .requestMatchers("/api/usuarios/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers("/api/profissionais/**")
+                        .hasRole("ADMIN")
+
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/pacientes",
                                 "/api/agendamentos"
                         ).permitAll()
+
                         .requestMatchers("/admin/**")
-                        .hasAnyRole("ADMIN", "PROFISSIONAL")
-                        .requestMatchers("/api/**").authenticated()
-                        .anyRequest().authenticated()
+                        .hasAnyRole(
+                                "ADMIN",
+                                "PROFISSIONAL"
+                        )
+
+                        .requestMatchers("/api/**")
+                        .authenticated()
+
+                        .anyRequest()
+                        .authenticated()
                 )
                 .addFilterBefore(
                         jwtFilter,

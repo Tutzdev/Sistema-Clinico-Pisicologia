@@ -1,7 +1,22 @@
 spring:
   application:
     name: psicologia
-    mail:
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/psicologia}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:}
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: ${SHOW_SQL:false}
+    properties:
+      hibernate:
+        format_sql: true
+
+  mail:
     host: ${MAIL_HOST:smtp.gmail.com}
     port: ${MAIL_PORT:587}
     username: ${MAIL_USERNAME:}
@@ -13,21 +28,19 @@ spring:
       "[mail.smtp.timeout]": 5000
       "[mail.smtp.writetimeout]": 5000
 
-  datasource:
-    url: jdbc:postgresql://localhost:5432/psicologia
-    username: postgres
-    password: arthur15
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
+
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    issuer: psicologia-api
+    expiration-minutes: 120
+    cookie-secure: ${JWT_COOKIE_SECURE:false}
+
+  initial-admin:
+    email: ${ADMIN_EMAIL:}
+    password: ${ADMIN_PASSWORD:}
 
 notificacao:
   processamento-atraso-inicial-ms: 30000

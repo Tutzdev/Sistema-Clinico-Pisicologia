@@ -2,6 +2,7 @@ package br.com.agendamento.psicologia.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +15,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -54,6 +56,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     ) {
         try {
             Jwt jwt = jwtService.decodificarToken(token);
+
             UserDetails userDetails = userDetailsService
                     .loadUserByUsername(jwt.getSubject());
 
@@ -81,13 +84,34 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String extrairToken(HttpServletRequest request) {
-        String authorization = request.getHeader(AUTHORIZATION_HEADER);
+        String authorization = request.getHeader(
+                AUTHORIZATION_HEADER
+        );
 
-        if (authorization == null
-                || !authorization.startsWith(BEARER_PREFIX)) {
+        if (authorization != null
+                && authorization.startsWith(BEARER_PREFIX)) {
+            String token = authorization.substring(
+                    BEARER_PREFIX.length()
+            );
+
+            if (!token.isBlank()) {
+                return token;
+            }
+        }
+
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies == null) {
             return null;
         }
 
-        return authorization.substring(BEARER_PREFIX.length());
+        return Arrays.stream(cookies)
+                .filter(cookie -> JwtService.COOKIE_NAME.equals(
+                        cookie.getName()
+                ))
+                .map(Cookie::getValue)
+                .filter(token -> !token.isBlank())
+                .findFirst()
+                .orElse(null);
     }
 }
