@@ -1,6 +1,17 @@
 spring:
   application:
     name: psicologia
+    mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      "[mail.smtp.auth]": true
+      "[mail.smtp.starttls.enable]": true
+      "[mail.smtp.connectiontimeout]": 5000
+      "[mail.smtp.timeout]": 5000
+      "[mail.smtp.writetimeout]": 5000
 
   datasource:
     url: jdbc:postgresql://localhost:5432/psicologia
@@ -17,3 +28,7 @@ spring:
 
 server:
   port: 8080
+
+notificacao:
+  processamento-atraso-inicial-ms: 30000
+  processamento-intervalo-ms: 60000

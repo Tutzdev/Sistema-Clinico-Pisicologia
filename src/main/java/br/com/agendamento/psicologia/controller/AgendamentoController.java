@@ -22,45 +22,82 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/agendamentos")
 public class AgendamentoController {
-    
+
     private final AgendamentoService agendamentoService;
 
-    public AgendamentoController(AgendamentoService agendamentoService) {
+    public AgendamentoController(
+            AgendamentoService agendamentoService
+    ) {
         this.agendamentoService = agendamentoService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public AgendamentoResponseDTO agendar(
-        @Valid @RequestBody AgendamentoRequestDTO request
+            @Valid @RequestBody AgendamentoRequestDTO request
     ) {
         return AgendamentoResponseDTO.from(
-            agendamentoService.agendar(
-                request.pacienterId(),
-                request.horarioId()
-            )
+                agendamentoService.agendar(
+                        request.pacienteId(),
+                        request.horarioId()
+                )
+        );
+    }
+
+    @GetMapping("/{agendamentoId}")
+    public AgendamentoResponseDTO buscarPorId(
+            @PathVariable
+            @Positive(message = "O agendamento informado é inválido.")
+            Long agendamentoId
+    ) {
+        return AgendamentoResponseDTO.from(
+                agendamentoService.buscarPorId(agendamentoId)
         );
     }
 
     @GetMapping("/profissional/{profissionalId}")
     public List<AgendamentoResponseDTO> listarPorProfissional(
-        @PathVariable
-        @Positive(message = "O profssional informado é inválido.")
-        Long profissionalId
+            @PathVariable
+            @Positive(message = "O profissional informado é inválido.")
+            Long profissionalId
     ) {
-        return agendamentoService.listarPorProfissional(profissionalId)
+        return agendamentoService
+                .listarPorProfissional(profissionalId)
                 .stream()
                 .map(AgendamentoResponseDTO::from)
                 .toList();
     }
+
     @PatchMapping("/{agendamentoId}/confirmacao")
     public AgendamentoResponseDTO confirmar(
-        @PathVariable
-        @Positive(message = "O agendamento informado é inválido.")
-        Long agendamentoId
+            @PathVariable
+            @Positive(message = "O agendamento informado é inválido.")
+            Long agendamentoId
     ) {
         return AgendamentoResponseDTO.from(
-            agendamentoService.confirmar(agendamentoId)
+                agendamentoService.confirmar(agendamentoId)
+        );
+    }
+
+    @PatchMapping("/{agendamentoId}/cancelamento")
+    public AgendamentoResponseDTO cancelar(
+            @PathVariable
+            @Positive(message = "O agendamento informado é inválido.")
+            Long agendamentoId
+    ) {
+        return AgendamentoResponseDTO.from(
+                agendamentoService.cancelar(agendamentoId)
+        );
+    }
+
+    @PatchMapping("/{agendamentoId}/conclusao")
+    public AgendamentoResponseDTO concluir(
+            @PathVariable
+            @Positive(message = "O agendamento informado é inválido.")
+            Long agendamentoId
+    ) {
+        return AgendamentoResponseDTO.from(
+                agendamentoService.concluir(agendamentoId)
         );
     }
 }
