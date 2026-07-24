@@ -16,6 +16,7 @@ public interface UsuarioRepository
     @EntityGraph(attributePaths = "profissional")
     List<Usuario> findAllByOrderByEmailAsc();
 
+    @EntityGraph(attributePaths = "profissional")
     Optional<Usuario> findByEmailIgnoreCase(String email);
 
     @EntityGraph(attributePaths = "profissional")

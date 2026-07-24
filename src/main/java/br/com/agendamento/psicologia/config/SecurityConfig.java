@@ -187,6 +187,7 @@ public class SecurityConfig {
                                 "/",
                                 "/login",
                                 "/api/auth/**",
+                                "/api/public/**",
                                 "/agendar/**",
                                 "/css/**",
                                 "/js/**",
@@ -206,11 +207,23 @@ public class SecurityConfig {
                                 "/api/agendamentos"
                         ).permitAll()
 
+                        .requestMatchers("/logout")
+                        .authenticated()
+
+                        .requestMatchers("/profissional/**")
+                        .hasRole("PROFISSIONAL")
+
+                        .requestMatchers("/api/profissional/me/**")
+                        .hasRole("PROFISSIONAL")
+
                         .requestMatchers("/admin/**")
-                        .hasAnyRole(
-                                "ADMIN",
-                                "PROFISSIONAL"
-                        )
+                        .hasRole("ADMIN")
+
+                        .requestMatchers("/api/pacientes/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers("/api/agendamentos/**")
+                        .hasRole("ADMIN")
 
                         .requestMatchers("/api/**")
                         .authenticated()

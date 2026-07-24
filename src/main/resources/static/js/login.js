@@ -23,7 +23,15 @@
                 sessionStorage.setItem("email", data.email);
                 sessionStorage.setItem("role", data.role);
                 sessionStorage.setItem("usuarioId", String(data.usuarioId));
-                window.location.assign("/admin");
+                if (data.profissionalId) {
+                    sessionStorage.setItem("profissionalId", String(data.profissionalId));
+                    sessionStorage.setItem("profissionalNome", data.profissionalNome);
+                }
+                window.location.assign(
+                    data.role === "PROFISSIONAL"
+                        ? "/profissional"
+                        : "/admin"
+                );
             } catch (error) {
                 Clinic.showFieldErrors(form, error.validationErrors);
                 const message = error.status === 401 ? "E-mail ou senha inválidos." : error.message;

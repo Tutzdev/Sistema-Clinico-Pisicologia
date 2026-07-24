@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Minha agenda | Clínica Serena</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script defer th:src="@{/js/common.js}"></script>
+    <script defer th:src="@{/js/profissional.js}"></script>
+</head>
+<body>
+<aside class="sidebar">
+    <a class="brand brand--light" th:href="@{/profissional}"><span class="brand-mark">S</span><span>Clínica Serena</span></a>
+    <nav class="side-nav" aria-label="Navegação profissional">
+        <a class="active" href="#visao-geral">Minha visão geral</a>
+        <a href="#atendimentos">Atendimentos</a>
+        <a href="#horarios">Horários disponíveis</a>
+    </nav>
+    <form th:action="@{/logout}" method="post"><button class="side-logout" data-logout type="submit">Sair com segurança</button></form>
+</aside>
+<div class="sidebar-overlay" data-sidebar-overlay></div>
+<div class="app-shell">
+    <header class="topbar">
+        <button class="menu-button" data-menu-toggle aria-label="Abrir menu" aria-expanded="false">☰</button>
+        <div><strong data-user-email>Usuário</strong><span class="badge badge--neutral">Psicólogo(a)</span></div>
+    </header>
+    <main class="page-content">
+        <section class="page-heading" id="visao-geral">
+            <p class="eyebrow">Área do psicólogo</p>
+            <h1>Olá, <span data-professional-name>Psicólogo(a)</span>.</h1>
+            <p>Acompanhe seus próximos atendimentos e organize os horários da sua agenda.</p>
+        </section>
+
+        <section class="metrics metrics--three" aria-label="Resumo da agenda">
+            <article class="metric-card"><span>Atendimentos hoje</span><strong data-today-count>0</strong><p>Consultas previstas para o dia.</p></article>
+            <article class="metric-card"><span>Aguardando confirmação</span><strong data-pending-count>0</strong><p>Solicitações que precisam de atenção.</p></article>
+            <article class="metric-card"><span>Próximos atendimentos</span><strong data-upcoming-count>0</strong><p>Consultas futuras não canceladas.</p></article>
+        </section>
+
+        <section class="card professional-section" id="atendimentos">
+            <div class="section-heading">
+                <div><h2>Meus atendimentos</h2><p>Somente pacientes vinculados à sua agenda são exibidos.</p></div>
+            </div>
+            <div class="filters">
+                <div class="form-field"><label for="appointment-date">Filtrar por data</label><input id="appointment-date" type="date"></div>
+                <div class="form-field"><label for="appointment-status">Filtrar por status</label><select id="appointment-status"><option value="">Todos</option><option value="PENDENTE">Pendente</option><option value="CONFIRMADO">Confirmado</option><option value="CANCELADO">Cancelado</option><option value="CONCLUIDO">Concluído</option></select></div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Data e hora</th><th>Paciente</th><th>Contato</th><th>Status</th><th><span class="sr-only">Ações</span></th></tr></thead>
+                    <tbody id="professional-appointments"></tbody>
+                </table>
+            </div>
+            <div class="loading-state" data-appointments-loading>Carregando atendimentos…</div>
+            <div class="empty-state" data-appointments-empty hidden><h3>Nenhum atendimento encontrado</h3><p>Ajuste os filtros ou aguarde novas solicitações.</p></div>
+        </section>
+
+        <section class="professional-schedule" id="horarios">
+            <article class="card">
+                <h2>Disponibilizar horário</h2>
+                <p class="muted">O horário ficará visível para pacientes imediatamente.</p>
+                <form id="professional-slot-form" novalidate>
+                    <div class="form-field"><label for="professional-slot-date">Data e horário</label><input id="professional-slot-date" name="dataHora" type="datetime-local" required><small class="field-error" data-error-for="dataHora"></small></div>
+                    <button class="button button--primary button--block">Adicionar à agenda</button>
+                </form>
+            </article>
+            <article class="card">
+                <div class="section-heading"><div><h2>Horários disponíveis</h2><p>Horários ainda não reservados.</p></div></div>
+                <div class="slot-list" data-professional-slots></div>
+                <div class="loading-state" data-slots-loading>Carregando horários…</div>
+                <div class="empty-state" data-slots-empty hidden><h3>Nenhum horário disponível</h3><p>Adicione um novo horário para receber solicitações.</p></div>
+            </article>
+        </section>
+    </main>
+</div>
+
+<div class="modal" id="professional-action-modal" role="dialog" aria-modal="true" aria-labelledby="professional-action-title" hidden>
+    <div class="modal-card">
+        <h2 id="professional-action-title" data-action-title>Confirmar ação?</h2>
+        <p data-action-message></p>
+        <div class="modal-actions"><button class="button button--secondary" data-modal-close>Voltar</button><button class="button button--primary" data-confirm-action>Confirmar</button></div>
+    </div>
+</div>
+</body>
+</html>

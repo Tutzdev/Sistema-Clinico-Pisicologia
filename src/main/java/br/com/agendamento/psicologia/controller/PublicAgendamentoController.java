@@ -1,6 +1,7 @@
 package br.com.agendamento.psicologia.controller;
 
 import br.com.agendamento.psicologia.entity.Profissional;
+import br.com.agendamento.psicologia.exception.ResourceNotFoundException;
 import br.com.agendamento.psicologia.service.AgendaService;
 import br.com.agendamento.psicologia.service.ProfissionalService;
 import org.springframework.stereotype.Controller;
@@ -29,8 +30,15 @@ public class PublicAgendamentoController {
             @PathVariable String codigoAgenda,
             Model model
     ) {
-        Profissional profissional = profissionalService
-                .buscarPorCodigoAgenda(codigoAgenda);
+        Profissional profissional;
+
+        try {
+            profissional = profissionalService
+                    .buscarPorCodigoAgenda(codigoAgenda);
+        } catch (ResourceNotFoundException exception) {
+            model.addAttribute("agendaIndisponivel", true);
+            return "public/agendamento";
+        }
 
         model.addAttribute("profissional", profissional);
         model.addAttribute(

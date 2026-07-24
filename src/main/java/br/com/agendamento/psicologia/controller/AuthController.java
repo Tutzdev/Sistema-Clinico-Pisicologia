@@ -78,7 +78,7 @@ public class AuthController {
         );
     }
 
-    @PostMapping("/admin/logout")
+    @PostMapping({"/logout", "/admin/logout"})
     public String logout(HttpServletResponse response) {
         ResponseCookie cookie = criarCookie(
                 "",
@@ -118,7 +118,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(cookieSecure)
                 .sameSite("Strict")
-                .path("/admin")
+                .path("/")
                 .maxAge(duracao)
                 .build();
     }

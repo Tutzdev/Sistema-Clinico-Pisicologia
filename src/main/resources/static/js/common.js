@@ -1,5 +1,8 @@
 (() => {
-    const storageKeys = ["accessToken", "email", "role", "usuarioId"];
+    const storageKeys = [
+        "accessToken", "email", "role", "usuarioId",
+        "profissionalId", "profissionalNome"
+    ];
 
     const parseProblem = async (response) => {
         let body = {};
@@ -124,6 +127,10 @@
         });
         document.querySelectorAll("[data-user-email]").forEach((el) => {
             el.textContent = sessionStorage.getItem("email") || "Usuário autenticado";
+        });
+        document.querySelectorAll("[data-professional-name]").forEach((el) => {
+            el.textContent = sessionStorage.getItem("profissionalNome")
+                || "Psicólogo(a)";
         });
         document.querySelectorAll("[data-user-role]").forEach((el) => {
             el.textContent = sessionStorage.getItem("role") === "PROFISSIONAL" ? "Profissional" : "Administrador";

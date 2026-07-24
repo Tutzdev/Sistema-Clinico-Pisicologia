@@ -87,6 +87,30 @@ public class AgendaService {
         horarioRepository.delete(horario);
     }
 
+    @Transactional
+    public void excluirHorarioDoProfissional(
+            Long horarioId,
+            Long profissionalId
+    ) {
+        HorarioDisponivel horario = buscarHorarioParaAlteracao(
+                horarioId
+        );
+
+        if (!horario.getProfissional().getId().equals(profissionalId)) {
+            throw new BusinessException(
+                    "Este horário não pertence à sua agenda."
+            );
+        }
+
+        if (!horario.isDisponivel()) {
+            throw new BusinessException(
+                    "Um horário reservado não pode ser excluído."
+            );
+        }
+
+        horarioRepository.delete(horario);
+    }
+
     private HorarioDisponivel buscarHorarioParaAlteracao(
             Long horarioId
     ) {

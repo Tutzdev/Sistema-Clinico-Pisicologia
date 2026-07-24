@@ -3,6 +3,7 @@
     document.addEventListener("DOMContentLoaded", () => {
         const root = document.querySelector(".booking-container");
         const form = document.querySelector("#booking-patient-form");
+        if (!form) return;
         const showStep = (next) => {
             step = next;
             document.querySelectorAll("[data-step]").forEach((section) => { section.hidden = Number(section.dataset.step) !== step; });

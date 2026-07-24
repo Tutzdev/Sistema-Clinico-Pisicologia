@@ -78,6 +78,19 @@ public class UsuarioService {
         return usuarioRepository.findAllByOrderByEmailAsc();
     }
 
+    public Profissional buscarProfissionalDoUsuario(String email) {
+        Usuario usuario = buscarPorEmail(email);
+
+        if (usuario.getRole() != RoleEnum.PROFISSIONAL
+                || usuario.getProfissional() == null) {
+            throw new BusinessException(
+                    "O usuário não possui um profissional vinculado."
+            );
+        }
+
+        return usuario.getProfissional();
+    }
+
     @Transactional
     public Usuario criarAdministradorInicial(
             String email,

@@ -9,7 +9,9 @@ public record LoginResponseDTO(
         long expiresIn,
         Long usuarioId,
         String email,
-        RoleEnum role
+        RoleEnum role,
+        Long profissionalId,
+        String profissionalNome
 ) {
 
     private static final String TOKEN_TYPE = "Bearer";
@@ -19,13 +21,17 @@ public record LoginResponseDTO(
             long expiresIn,
             Usuario usuario
     ) {
+        var profissional = usuario.getProfissional();
+
         return new LoginResponseDTO(
                 accessToken,
                 TOKEN_TYPE,
                 expiresIn,
                 usuario.getId(),
                 usuario.getEmail(),
-                usuario.getRole()
+                usuario.getRole(),
+                profissional != null ? profissional.getId() : null,
+                profissional != null ? profissional.getNome() : null
         );
     }
 }

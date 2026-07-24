@@ -53,7 +53,15 @@ public class AgendamentoService {
         horario.reservar();
         horarioRepository.save(horario);
 
-        return agendamentoRepository.save(agendamento);
+        Agendamento salvo = agendamentoRepository.save(
+                agendamento
+        );
+
+        return agendamentoRepository.findDetailsById(
+                salvo.getId()
+        ).orElseThrow(() -> new ResourceNotFoundException(
+                "Agendamento não encontrado após a criação."
+        ));
     }
 
     public Agendamento buscarPorId(Long agendamentoId) {
@@ -90,6 +98,24 @@ public class AgendamentoService {
     }
 
     @Transactional
+    public Agendamento confirmarDoProfissional(
+            Long agendamentoId,
+            Long profissionalId
+    ) {
+        Agendamento agendamento = buscarAgendamentoParaAlteracao(
+                agendamentoId
+        );
+
+        validarProfissionalResponsavel(
+                agendamento,
+                profissionalId
+        );
+        agendamento.confirmar();
+
+        return agendamentoRepository.save(agendamento);
+    }
+
+    @Transactional
     public Agendamento cancelar(Long agendamentoId) {
         Agendamento agendamento = buscarAgendamentoParaAlteracao(
                 agendamentoId
@@ -112,11 +138,58 @@ public class AgendamentoService {
     }
 
     @Transactional
+    public Agendamento cancelarDoProfissional(
+            Long agendamentoId,
+            Long profissionalId
+    ) {
+        Agendamento agendamento = buscarAgendamentoParaAlteracao(
+                agendamentoId
+        );
+
+        validarProfissionalResponsavel(
+                agendamento,
+                profissionalId
+        );
+
+        if (agendamento.getStatus() == StatusAgendamentoEnum.CANCELADO) {
+            return agendamento;
+        }
+
+        HorarioDisponivel horario = buscarHorario(
+                agendamento.getHorario().getId()
+        );
+
+        agendamento.cancelar();
+        horario.liberar();
+        horarioRepository.save(horario);
+
+        return agendamentoRepository.save(agendamento);
+    }
+
+    @Transactional
     public Agendamento concluir(Long agendamentoId) {
         Agendamento agendamento = buscarAgendamentoParaAlteracao(
                 agendamentoId
         );
 
+        agendamento.concluir(LocalDateTime.now());
+
+        return agendamentoRepository.save(agendamento);
+    }
+
+    @Transactional
+    public Agendamento concluirDoProfissional(
+            Long agendamentoId,
+            Long profissionalId
+    ) {
+        Agendamento agendamento = buscarAgendamentoParaAlteracao(
+                agendamentoId
+        );
+
+        validarProfissionalResponsavel(
+                agendamento,
+                profissionalId
+        );
         agendamento.concluir(LocalDateTime.now());
 
         return agendamentoRepository.save(agendamento);
@@ -179,6 +252,18 @@ public class AgendamentoService {
                 horario,
                 dataCriacao
         );
+    }
+
+    private void validarProfissionalResponsavel(
+            Agendamento agendamento,
+            Long profissionalId
+    ) {
+        if (!agendamento.getProfissional().getId()
+                .equals(profissionalId)) {
+            throw new BusinessException(
+                    "Este agendamento não pertence à sua agenda."
+            );
+        }
     }
 
 

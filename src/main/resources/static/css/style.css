@@ -50,3 +50,43 @@ input[aria-invalid=true], select[aria-invalid=true] { border-color: var(--color-
     .booking-container { margin: 1.5rem auto; }.stepper li { justify-content: center; font-size: 0; }.stepper li span { font-size: .82rem; }.review-list div { grid-template-columns: 1fr; gap: .2rem; }.booking-actions, .confirmation-actions { align-items: stretch; flex-direction: column-reverse; }.booking-actions .button, .confirmation-actions .button { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto; transition-duration: .01ms; animation-duration: .01ms; animation-iteration-count: 1; } }
+
+/* Public home */
+.professional-link, .back-home-link { color: var(--color-primary-dark); font-size: .86rem; font-weight: 750; }
+.professional-link { padding: .5rem .75rem; border-radius: var(--radius-sm); }
+.professional-link:hover { background: #edf4f0; }
+.back-home-link { display: inline-block; margin-top: 1.25rem; }
+.home-hero { display: grid; width: min(1120px, calc(100% - 2rem)); margin: 0 auto; padding: clamp(3rem,8vw,7rem) 0; grid-template-columns: 1.35fr .65fr; align-items: center; gap: clamp(2rem,7vw,6rem); }
+.home-hero h1 { max-width: 720px; font-size: clamp(2.5rem,6vw,5rem); }
+.home-hero > div > p:not(.eyebrow) { max-width: 650px; margin-bottom: 1.7rem; color: var(--color-text-muted); font-size: 1.08rem; }
+.trust-card { padding: 1.7rem; border: 1px solid var(--color-border); border-radius: var(--radius-lg); background: #eaf2ee; box-shadow: var(--shadow-sm); }
+.trust-card strong { color: var(--color-primary-dark); font-size: 1.12rem; }
+.trust-card ul { display: grid; gap: .75rem; margin: 1.2rem 0 0; padding-left: 1.2rem; color: #496159; }
+.home-about { padding: clamp(3rem,7vw,6rem) max(1rem,calc((100% - 900px)/2)); background: var(--color-primary-dark); color: #e8f0ec; text-align: center; }
+.home-about .eyebrow { color: #b7cec3; }.home-about h2 { color: #fff; font-size: clamp(1.7rem,4vw,2.7rem); }.home-about p:last-child { max-width: 720px; margin: auto; color: #d3e0da; }
+.home-booking { width: min(960px, calc(100% - 2rem)); margin: 0 auto; padding: clamp(3rem,7vw,6rem) 0; }
+.stepper--four { grid-template-columns: repeat(4, 1fr); }
+.professional-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: .8rem; margin-top: 1.2rem; }
+.professional-option { display: flex; min-height: 78px; align-items: center; gap: .85rem; padding: .85rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: #fff; color: var(--color-text); text-align: left; cursor: pointer; }
+.professional-option:hover, .professional-option.selected { border-color: var(--color-primary-dark); background: #edf4f0; box-shadow: var(--shadow-sm); }
+.professional-option span:last-child { display: grid; }.professional-option small { color: var(--color-text-muted); }
+.professional-avatar { display: grid; width: 46px; flex: 0 0 46px; aspect-ratio: 1; place-items: center; border-radius: 50%; background: var(--color-primary); color: #fff; font-family: Georgia,serif; font-size: 1.25rem; }
+.invalid-schedule { max-width: 650px; margin: 5rem auto; text-align: center; }.invalid-icon { display: grid; width: 60px; margin: 0 auto 1rem; aspect-ratio: 1; place-items: center; border-radius: 50%; background: #fff1d8; color: var(--color-warning); font-size: 1.7rem; font-weight: 800; }
+
+/* Professional area */
+.metrics--three { grid-template-columns: repeat(3,1fr); }
+.professional-section { margin-bottom: 1.25rem; scroll-margin-top: 1rem; }
+.professional-schedule { display: grid; grid-template-columns: minmax(260px,.65fr) minmax(0,1.35fr); align-items: start; gap: 1.25rem; scroll-margin-top: 1rem; }
+.slot-list { display: grid; gap: .6rem; }.slot-list-item { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .75rem .9rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: #fafcfb; }
+
+@media (max-width: 900px) {
+    .home-hero, .professional-schedule { grid-template-columns: 1fr; }
+    .trust-card { max-width: 600px; }
+}
+@media (max-width: 760px) {
+    .home-hero { padding: 3.2rem 0; }.home-hero h1 { font-size: 2.65rem; }
+    .professional-grid { grid-template-columns: 1fr; }
+    .stepper--four { grid-template-columns: repeat(4,1fr); }
+    .metrics--three { grid-template-columns: 1fr; }
+    .professional-link { font-size: .78rem; }
+}

@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Clínica Serena | Psicologia e acolhimento</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script defer th:src="@{/js/common.js}"></script>
+    <script defer th:src="@{/js/home.js}"></script>
+</head>
+<body class="public-page home-page">
+<header class="public-header">
+    <a class="brand" th:href="@{/}">
+        <span class="brand-mark">S</span>
+        <span>Clínica Serena</span>
+    </a>
+    <a class="professional-link" th:href="@{/login}">Área do profissional</a>
+</header>
+<main>
+    <section class="home-hero">
+        <div>
+            <p class="eyebrow">Psicologia com escuta e respeito</p>
+            <h1>Um espaço seguro para cuidar de você.</h1>
+            <p>Atendimento psicológico acolhedor, sigiloso e organizado para acompanhar cada pessoa em seu próprio tempo.</p>
+            <a class="button button--primary" href="#agendamento">Solicitar atendimento</a>
+        </div>
+        <aside class="trust-card" aria-label="Compromissos da clínica">
+            <strong>Cuidado que começa no primeiro contato</strong>
+            <ul>
+                <li>Atendimento ético e confidencial</li>
+                <li>Escolha livre do psicólogo ou psicóloga</li>
+                <li>Agendamento simples e transparente</li>
+            </ul>
+        </aside>
+    </section>
+
+    <section class="home-about" aria-labelledby="about-title">
+        <p class="eyebrow">Como podemos ajudar</p>
+        <h2 id="about-title">Escuta profissional em um ambiente de confiança</h2>
+        <p>Nossa equipe oferece acompanhamento psicológico com atenção à história, às necessidades e aos objetivos de cada paciente.</p>
+    </section>
+
+    <section class="home-booking" id="agendamento">
+        <div class="booking-intro">
+            <p class="eyebrow">Agendamento online</p>
+            <h2>Solicite seu atendimento</h2>
+            <p>Escolha o profissional e um horário disponível. A solicitação será enviada para confirmação da clínica.</p>
+        </div>
+        <ol class="stepper stepper--four" aria-label="Etapas do agendamento">
+            <li class="active" data-step-indicator="1"><span>1</span>Psicólogo(a)</li>
+            <li data-step-indicator="2"><span>2</span>Horário</li>
+            <li data-step-indicator="3"><span>3</span>Seus dados</li>
+            <li data-step-indicator="4"><span>4</span>Revisão</li>
+        </ol>
+
+        <section class="booking-card" data-step="1">
+            <h3>Com quem você gostaria de conversar?</h3>
+            <div class="professional-grid" th:unless="${#lists.isEmpty(profissionais)}">
+                <button class="professional-option" type="button"
+                        th:each="p : ${profissionais}"
+                        th:attr="data-professional-id=${p.id},data-professional-name=${p.nome},data-professional-code=${p.codigoAgenda}">
+                    <span class="professional-avatar" aria-hidden="true"
+                          th:text="${#strings.substring(p.nome, 0, 1)}">P</span>
+                    <span><strong th:text="${p.nome}">Psicólogo(a)</strong><small>Psicólogo(a)</small></span>
+                </button>
+            </div>
+            <div class="empty-state" th:if="${#lists.isEmpty(profissionais)}">
+                <h3>Nenhum psicólogo disponível</h3>
+                <p>A equipe ainda não publicou agendas. Tente novamente mais tarde.</p>
+            </div>
+            <div class="booking-actions"><span></span><button class="button button--primary" data-next disabled>Ver horários</button></div>
+        </section>
+
+        <section class="booking-card" data-step="2" hidden>
+            <div class="section-heading"><div><h3>Escolha um horário disponível</h3><p data-selected-professional></p></div></div>
+            <div class="loading-state" data-slots-loading hidden>Buscando horários disponíveis…</div>
+            <div class="slot-grid" data-slots></div>
+            <div class="empty-state" data-slots-empty hidden><h3>Sem horários disponíveis</h3><p>Escolha outro profissional ou volte mais tarde.</p></div>
+            <div class="booking-actions"><button class="button button--secondary" data-back>Voltar</button><button class="button button--primary" data-next disabled>Continuar</button></div>
+        </section>
+
+        <section class="booking-card" data-step="3" hidden>
+            <h3>Informe seus dados</h3>
+            <p class="muted">Seus dados serão usados somente para contato sobre o atendimento.</p>
+            <form id="home-booking-form" novalidate>
+                <div class="form-grid">
+                    <div class="form-field form-field--full"><label for="home-name">Nome completo</label><input id="home-name" name="nome" required maxlength="120"><small class="field-error" data-error-for="nome"></small></div>
+                    <div class="form-field"><label for="home-phone">Telefone</label><input id="home-phone" name="telefone" type="tel" inputmode="numeric" required><small class="field-error" data-error-for="telefone"></small></div>
+                    <div class="form-field"><label for="home-email">E-mail <span class="optional">(opcional)</span></label><input id="home-email" name="email" type="email" maxlength="160"><small class="field-error" data-error-for="email"></small></div>
+                </div>
+                <div class="booking-actions"><button type="button" class="button button--secondary" data-back>Voltar</button><button class="button button--primary">Revisar solicitação</button></div>
+            </form>
+        </section>
+
+        <section class="booking-card" data-step="4" hidden>
+            <h3>Revise sua solicitação</h3>
+            <dl class="review-list">
+                <div><dt>Psicólogo(a)</dt><dd data-review-professional></dd></div>
+                <div><dt>Data e horário</dt><dd data-review-date></dd></div>
+                <div><dt>Paciente</dt><dd data-review-name></dd></div>
+                <div><dt>Telefone</dt><dd data-review-phone></dd></div>
+                <div><dt>E-mail</dt><dd data-review-email></dd></div>
+            </dl>
+            <p class="info-note">O horário será solicitado e ficará pendente até a confirmação do psicólogo ou psicóloga.</p>
+            <p class="form-message" data-booking-error aria-live="assertive"></p>
+            <div class="booking-actions"><button class="button button--secondary" data-back>Corrigir dados</button><button class="button button--primary" data-confirm-booking>Solicitar agendamento</button></div>
+        </section>
+    </section>
+</main>
+<footer class="public-footer">Clínica Serena · Psicologia, privacidade e acolhimento.</footer>
+</body>
+</html>

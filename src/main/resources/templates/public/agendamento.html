@@ -1,11 +1,75 @@
-<!doctype html><html lang="pt-BR" xmlns:th="http://www.thymeleaf.org"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Agendar consulta | Clínica Serena</title><link rel="stylesheet" th:href="@{/css/style.css}"><script defer th:src="@{/js/common.js}"></script><script defer th:src="@{/js/agendamento.js}"></script></head>
-<body class="public-page"><header class="public-header"><a class="brand" href="/"><span class="brand-mark">S</span><span>Clínica Serena</span></a><span class="secure-note">Ambiente seguro</span></header>
-<main class="booking-container" th:attr="data-professional-id=${profissional.id},data-professional-name=${profissional.nome},data-code=${profissional.codigoAgenda}">
-<div class="booking-intro"><p class="eyebrow">Agendamento online</p><h1>Escolha o melhor momento para você</h1><p>Atendimento com <strong th:text="${profissional.nome}">Profissional</strong>. Preencha as etapas abaixo para solicitar sua consulta.</p></div>
-<ol class="stepper" aria-label="Etapas do agendamento"><li class="active" data-step-indicator="1"><span>1</span>Horário</li><li data-step-indicator="2"><span>2</span>Seus dados</li><li data-step-indicator="3"><span>3</span>Revisão</li></ol>
-<section class="booking-card" data-step="1"><div class="section-heading"><div><h2>Selecione um horário</h2><p>Os horários exibidos estão disponíveis neste momento.</p></div></div>
-<div class="slot-grid" th:unless="${#lists.isEmpty(horarios)}"><button type="button" class="slot" th:each="h : ${horarios}" th:attr="data-slot-id=${h.id},data-slot-date=${h.dataHora}" th:text="${#temporals.format(h.dataHora,'EEE, dd/MM · HH:mm')}">Data</button></div>
-<div class="empty-state" th:if="${#lists.isEmpty(horarios)}"><h3>Sem horários disponíveis</h3><p>Novos horários serão publicados em breve. Volte mais tarde.</p></div><div class="booking-actions"><span></span><button class="button button--primary" data-next disabled>Continuar</button></div></section>
-<section class="booking-card" data-step="2" hidden><div class="section-heading"><div><h2>Conte um pouco sobre você</h2><p>Usaremos estes dados somente para o atendimento.</p></div></div><form id="booking-patient-form" novalidate><div class="form-grid"><div class="form-field form-field--full"><label for="booking-name">Nome completo</label><input id="booking-name" name="nome" required maxlength="120"><small class="field-error" data-error-for="nome"></small></div><div class="form-field"><label for="booking-phone">Telefone</label><input id="booking-phone" name="telefone" type="tel" inputmode="numeric" required><small class="field-error" data-error-for="telefone"></small></div><div class="form-field"><label for="booking-email">E-mail <span class="optional">(opcional)</span></label><input id="booking-email" name="email" type="email" maxlength="160"><small class="field-error" data-error-for="email"></small></div></div><div class="booking-actions"><button type="button" class="button button--secondary" data-back>Voltar</button><button class="button button--primary">Revisar dados</button></div></form></section>
-<section class="booking-card" data-step="3" hidden><h2>Revise seu agendamento</h2><dl class="review-list"><div><dt>Profissional</dt><dd data-review-professional></dd></div><div><dt>Data e horário</dt><dd data-review-date></dd></div><div><dt>Paciente</dt><dd data-review-name></dd></div><div><dt>Telefone</dt><dd data-review-phone></dd></div><div><dt>E-mail</dt><dd data-review-email></dd></div></dl><p class="info-note">Após o envio, aguarde a confirmação da clínica. Se informou um e-mail, você poderá receber atualizações por ele.</p><p class="form-message" data-booking-error aria-live="assertive"></p><div class="booking-actions"><button class="button button--secondary" data-back>Corrigir dados</button><button class="button button--primary" data-confirm-booking>Solicitar agendamento</button></div></section>
-</main><footer class="public-footer">Clínica Serena · Cuidado, privacidade e acolhimento.</footer></body></html>
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Agendar consulta | Clínica Serena</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script defer th:src="@{/js/common.js}"></script>
+    <script defer th:src="@{/js/agendamento.js}"></script>
+</head>
+<body class="public-page">
+<header class="public-header">
+    <a class="brand" th:href="@{/}"><span class="brand-mark">S</span><span>Clínica Serena</span></a>
+    <a class="professional-link" th:href="@{/login}">Área do profissional</a>
+</header>
+<main class="booking-container" th:if="${agendaIndisponivel}">
+    <section class="booking-card invalid-schedule">
+        <div class="invalid-icon" aria-hidden="true">!</div>
+        <p class="eyebrow">Link indisponível</p>
+        <h1>Esta agenda não foi encontrada</h1>
+        <p>O link pode estar incorreto ou não estar mais disponível. Você ainda pode escolher outro psicólogo pela página inicial.</p>
+        <a class="button button--primary" th:href="@{/#agendamento}">Ver psicólogos disponíveis</a>
+    </section>
+</main>
+<main class="booking-container"
+      th:unless="${agendaIndisponivel}"
+      th:attr="data-professional-id=${profissional.id},data-professional-name=${profissional.nome},data-code=${profissional.codigoAgenda}">
+    <div class="booking-intro">
+        <p class="eyebrow">Agendamento online</p>
+        <h1>Escolha o melhor momento para você</h1>
+        <p>Atendimento com <strong th:text="${profissional.nome}">Psicólogo(a)</strong>. Selecione um horário e envie sua solicitação.</p>
+    </div>
+    <ol class="stepper" aria-label="Etapas do agendamento">
+        <li class="active" data-step-indicator="1"><span>1</span>Horário</li>
+        <li data-step-indicator="2"><span>2</span>Seus dados</li>
+        <li data-step-indicator="3"><span>3</span>Revisão</li>
+    </ol>
+    <section class="booking-card" data-step="1">
+        <div class="section-heading"><div><h2>Selecione um horário</h2><p>Os horários exibidos estão disponíveis neste momento.</p></div></div>
+        <div class="slot-grid" th:unless="${#lists.isEmpty(horarios)}">
+            <button type="button" class="slot" th:each="h : ${horarios}"
+                    th:attr="data-slot-id=${h.id},data-slot-date=${h.dataHora}"
+                    th:text="${#temporals.format(h.dataHora,'EEE, dd/MM · HH:mm')}">Data</button>
+        </div>
+        <div class="empty-state" th:if="${#lists.isEmpty(horarios)}"><h3>Sem horários disponíveis</h3><p>Novos horários serão publicados em breve. Volte mais tarde.</p></div>
+        <div class="booking-actions"><a class="button button--secondary" th:href="@{/#agendamento}">Outro psicólogo</a><button class="button button--primary" data-next disabled>Continuar</button></div>
+    </section>
+    <section class="booking-card" data-step="2" hidden>
+        <div class="section-heading"><div><h2>Conte um pouco sobre você</h2><p>Usaremos estes dados somente para o atendimento.</p></div></div>
+        <form id="booking-patient-form" novalidate>
+            <div class="form-grid">
+                <div class="form-field form-field--full"><label for="booking-name">Nome completo</label><input id="booking-name" name="nome" required maxlength="120"><small class="field-error" data-error-for="nome"></small></div>
+                <div class="form-field"><label for="booking-phone">Telefone</label><input id="booking-phone" name="telefone" type="tel" inputmode="numeric" required><small class="field-error" data-error-for="telefone"></small></div>
+                <div class="form-field"><label for="booking-email">E-mail <span class="optional">(opcional)</span></label><input id="booking-email" name="email" type="email" maxlength="160"><small class="field-error" data-error-for="email"></small></div>
+            </div>
+            <div class="booking-actions"><button type="button" class="button button--secondary" data-back>Voltar</button><button class="button button--primary">Revisar dados</button></div>
+        </form>
+    </section>
+    <section class="booking-card" data-step="3" hidden>
+        <h2>Revise seu agendamento</h2>
+        <dl class="review-list">
+            <div><dt>Psicólogo(a)</dt><dd data-review-professional></dd></div>
+            <div><dt>Data e horário</dt><dd data-review-date></dd></div>
+            <div><dt>Paciente</dt><dd data-review-name></dd></div>
+            <div><dt>Telefone</dt><dd data-review-phone></dd></div>
+            <div><dt>E-mail</dt><dd data-review-email></dd></div>
+        </dl>
+        <p class="info-note">Após o envio, aguarde a confirmação do psicólogo ou psicóloga.</p>
+        <p class="form-message" data-booking-error aria-live="assertive"></p>
+        <div class="booking-actions"><button class="button button--secondary" data-back>Corrigir dados</button><button class="button button--primary" data-confirm-booking>Solicitar agendamento</button></div>
+    </section>
+</main>
+<footer class="public-footer">Clínica Serena · Cuidado, privacidade e acolhimento.</footer>
+</body>
+</html>
