@@ -30,8 +30,7 @@ public class PublicAgendamentoController {
             Model model
     ) {
         Profissional profissional = profissionalService
-                .buscarPorCodigoAgenda(codigoAgenda)
-                .orElseThrow();
+                .buscarPorCodigoAgenda(codigoAgenda);
 
         model.addAttribute("profissional", profissional);
         model.addAttribute(
@@ -42,5 +41,10 @@ public class PublicAgendamentoController {
         );
 
         return "public/agendamento";
+    }
+
+    @GetMapping("/confirmacao")
+    public String paginaConfirmacao() {
+        return "public/confirmacao";
     }
 }

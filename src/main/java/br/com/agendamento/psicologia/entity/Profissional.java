@@ -21,9 +21,6 @@ public class Profissional {
     @Column(nullable = false, unique = true, length = 160)
     private String email;
 
-    @Column(nullable = false, length = 255)
-    private String senha;
-
     @Column(nullable = false, unique = true, length = 80)
     private String codigoAgenda;
 }

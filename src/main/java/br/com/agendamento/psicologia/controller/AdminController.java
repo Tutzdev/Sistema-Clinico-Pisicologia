@@ -68,4 +68,14 @@ public class AdminController {
 
         return "admin/pacientes";
     }
+
+    @GetMapping("/profissionais")
+    public String profissionais() {
+        return "admin/profissionais";
+    }
+
+    @GetMapping("/usuarios")
+    public String usuarios() {
+        return "admin/usuarios";
+    }
 }

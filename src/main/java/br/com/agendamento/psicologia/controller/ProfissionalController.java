@@ -22,7 +22,7 @@ import java.util.List;
 @Validated
 @RestController
 @RequestMapping("/api/profissionais")
-public class ProfissionaisController {
+public class ProfissionalController {
 
     private final ProfissionalService profissionalService;
 
@@ -54,7 +54,7 @@ public class ProfissionaisController {
                 .toList();
     }
 
-    @GetMapping("/{profissionalId")
+    @GetMapping("/{profissionalId}")
     public ProfissionalResponseDTO buscarPorId(
         @PathVariable
         @Positive(message = "O profissional informado é inválido.")
@@ -65,7 +65,7 @@ public class ProfissionaisController {
         );
     }
 
-    @PutMapping("/{profissionalId")
+    @PutMapping("/{profissionalId}")
     public ProfissionalResponseDTO atualizar(
             @PathVariable
             @Positive(message = "O profissional informado é inválido.")

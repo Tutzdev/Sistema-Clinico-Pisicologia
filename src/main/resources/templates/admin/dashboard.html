@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel | Clínica Serena</title><link rel="stylesheet" th:href="@{/css/style.css}">
+<script defer th:src="@{/js/common.js}"></script><script defer th:src="@{/js/dashboard.js}"></script></head>
+<body>
+<aside class="sidebar"><a class="brand brand--light" th:href="@{/admin}"><span class="brand-mark">S</span><span>Clínica Serena</span></a>
+<nav class="side-nav" aria-label="Navegação principal"><a class="active" th:href="@{/admin}">Visão geral</a><a th:href="@{/admin/agenda}">Agenda</a><a th:href="@{/admin/pacientes}">Pacientes</a><a data-admin-only th:href="@{/admin/profissionais}">Profissionais</a><a data-admin-only th:href="@{/admin/usuarios}">Usuários</a></nav>
+<form th:action="@{/admin/logout}" method="post"><button class="side-logout" data-logout type="submit">Sair com segurança</button></form></aside>
+<div class="sidebar-overlay" data-sidebar-overlay></div>
+<div class="app-shell"><header class="topbar"><button class="menu-button" data-menu-toggle aria-label="Abrir menu" aria-expanded="false">☰</button><div><strong data-user-email>Usuário autenticado</strong><span class="badge badge--neutral" data-user-role>Administrador</span></div></header>
+<main class="page-content"><div class="page-heading"><div><p class="eyebrow">Painel administrativo</p><h1><span data-greeting>Olá</span>, seja bem-vindo.</h1><p>Acompanhe os principais números e acesse rapidamente sua rotina clínica.</p></div></div>
+<section class="metrics" aria-label="Indicadores da clínica">
+<article class="metric-card"><span>Pacientes</span><strong th:text="${totalPacientes}">0</strong><p>Pessoas cadastradas na clínica.</p></article>
+<article class="metric-card"><span>Profissionais</span><strong th:text="${totalProfissionais}">0</strong><p>Equipe disponível para atendimento.</p></article>
+<article class="metric-card"><span>Horários disponíveis</span><strong th:text="${horariosDisponiveis}">0</strong><p>Oportunidades futuras de agendamento.</p></article>
+<article class="metric-card metric-card--attention"><span>Agendamentos pendentes</span><strong th:text="${agendamentosPendentes}">0</strong><p>Solicitações aguardando confirmação.</p></article></section>
+<section><div class="section-heading"><div><h2>Acessos rápidos</h2><p>Escolha uma área para começar.</p></div></div>
+<div class="shortcut-grid"><a class="shortcut-card" th:href="@{/admin/agenda}"><strong>Organizar agenda</strong><span>Cadastre e acompanhe horários disponíveis.</span></a><a class="shortcut-card" th:href="@{/admin/pacientes}"><strong>Gerenciar pacientes</strong><span>Consulte e atualize dados de contato.</span></a><a class="shortcut-card" data-admin-only th:href="@{/admin/profissionais}"><strong>Gerenciar profissionais</strong><span>Cuide da equipe e dos links públicos.</span></a><a class="shortcut-card" data-admin-only th:href="@{/admin/usuarios}"><strong>Controlar acessos</strong><span>Gerencie perfis e segurança das contas.</span></a></div></section>
+</main></div></body></html>

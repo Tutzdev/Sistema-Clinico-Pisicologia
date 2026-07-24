@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Entrar | Clínica Serena</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+    <script defer th:src="@{/js/common.js}" src="/js/common.js"></script>
+    <script defer th:src="@{/js/login.js}" src="/js/login.js"></script>
+</head>
+<body class="auth-page">
+<main class="auth-layout">
+    <section class="auth-welcome" aria-labelledby="welcome-title">
+        <a class="brand brand--light" href="/login"><span class="brand-mark">S</span><span>Clínica Serena</span></a>
+        <div>
+            <p class="eyebrow">Cuidado que acolhe</p>
+            <h1 id="welcome-title">Organização e tranquilidade para cuidar de pessoas.</h1>
+            <p>Um ambiente seguro para administrar a rotina clínica com atenção, clareza e confiança.</p>
+        </div>
+        <p class="auth-note">Acesso restrito à equipe da clínica.</p>
+    </section>
+    <section class="auth-panel">
+        <div class="auth-card">
+            <p class="eyebrow">Área administrativa</p>
+            <h2>Bem-vindo de volta</h2>
+            <p class="muted">Entre com suas credenciais para continuar.</p>
+            <form id="login-form" novalidate>
+                <div class="form-field">
+                    <label for="email">E-mail</label>
+                    <input id="email" name="email" type="email" autocomplete="username" required maxlength="160" placeholder="seuemail@clinica.com">
+                    <small class="field-error" data-error-for="email"></small>
+                </div>
+                <div class="form-field">
+                    <label for="senha">Senha</label>
+                    <div class="input-action">
+                        <input id="senha" name="senha" type="password" autocomplete="current-password" required minlength="8">
+                        <button type="button" class="text-button" data-password-toggle aria-label="Mostrar senha">Mostrar</button>
+                    </div>
+                    <small class="field-error" data-error-for="senha"></small>
+                </div>
+                <p id="login-message" class="form-message" aria-live="polite"></p>
+                <button class="button button--primary button--block" type="submit">Entrar</button>
+            </form>
+        </div>
+    </section>
+</main>
+</body>
+</html>

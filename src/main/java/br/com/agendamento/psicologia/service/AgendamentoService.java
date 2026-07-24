@@ -72,6 +72,12 @@ public class AgendamentoService {
                 );
     }
 
+    public long contarPendentes() {
+        return agendamentoRepository.countByStatus(
+                StatusAgendamentoEnum.PENDENTE
+        );
+    }
+
     @Transactional
     public Agendamento confirmar(Long agendamentoId) {
         Agendamento agendamento = buscarAgendamentoParaAlteracao(

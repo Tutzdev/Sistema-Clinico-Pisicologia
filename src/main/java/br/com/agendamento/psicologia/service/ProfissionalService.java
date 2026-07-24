@@ -26,20 +26,17 @@ public class ProfissionalService {
     public Profissional criar(
             String nome,
             String email,
-            String senhaCriptografada,
             String codigoAgenda
     ) {
         String emailNormalizado = normalizarEmail(email);
         String codigoNormalizado = normalizarCodigoAgenda(codigoAgenda);
 
-        validarSenhaCriptografada(senhaCriptografada);
         validarEmailDisponivel(emailNormalizado);
         validarCodigoAgendaDisponivel(codigoNormalizado);
 
         Profissional profissional = new Profissional();
         profissional.setNome(normalizarNome(nome));
         profissional.setEmail(emailNormalizado);
-        profissional.setSenha(senhaCriptografada);
         profissional.setCodigoAgenda(codigoNormalizado);
 
         return profissionalRepository.save(profissional);
@@ -103,19 +100,6 @@ public class ProfissionalService {
     }
 
     @Transactional
-    public void atualizarSenha(
-            Long profissionalId,
-            String senhaCriptografada
-    ) {
-        Profissional profissional = buscarPorId(profissionalId);
-
-        validarSenhaCriptografada(senhaCriptografada);
-
-        profissional.setSenha(senhaCriptografada);
-        profissionalRepository.save(profissional);
-    }
-
-    @Transactional
     public void excluir(Long profissionalId) {
         Profissional profissional = buscarPorId(profissionalId);
 
@@ -163,13 +147,6 @@ public class ProfissionalService {
             throw new BusinessException(
                     "O código da agenda já está sendo utilizado."
             );
-        }
-    }
-
-    private void validarSenhaCriptografada(String senhaCriptografada) {
-        if (senhaCriptografada == null
-                || senhaCriptografada.isBlank()) {
-            throw new BusinessException("A senha é obrigatória.");
         }
     }
 

@@ -53,9 +53,5 @@ public interface AgendamentoRepository
             Long profissionalId
     );
 
-    long countByDisponivelTrueAndDataHoraAfter(
-            LocalDateTime dataAtual
-    );
-
     long countByStatus(StatusAgendamentoEnum status);
 }

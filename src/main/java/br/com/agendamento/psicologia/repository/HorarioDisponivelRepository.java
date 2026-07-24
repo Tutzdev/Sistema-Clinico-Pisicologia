@@ -33,6 +33,10 @@ public interface HorarioDisponivelRepository
             LocalDateTime dataHora
     );
 
+    long countByDisponivelTrueAndDataHoraAfter(
+            LocalDateTime dataAtual
+    );
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("""
             SELECT horario
