@@ -15,9 +15,12 @@ public class Paciente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 120)
     private String nome;
 
+    @Column(nullable = false, length = 20)
     private String telefone;
 
+    @Column(unique = true, length = 160)
     private String email;
 }
